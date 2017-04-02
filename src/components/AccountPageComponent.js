@@ -80,7 +80,7 @@ class AccountPageComponent extends React.Component {
           permissions.push(
             this.state.authenticatedEnterprises.map(function(name) {
               return (
-                <li className='permission-item' key={name}>{name}</li>
+                <li className='permission-item' key={name}>{name} <a href='/'>Edit</a></li>
               );
             })
           );
