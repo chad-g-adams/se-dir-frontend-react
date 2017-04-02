@@ -12,6 +12,7 @@ import Directory from './DirectoryComponent.js';
 import ApplicationForm from './ApplicationFormComponent.js';
 import PrivacyPolicy from './PrivacyPolicyComponent.js';
 import LoginPage from './LoginPageComponent.js';
+import AccountPage from './AccountPageComponent.js';
 
 class AppComponent extends React.Component {
   render() {
@@ -32,6 +33,7 @@ class AppComponent extends React.Component {
           <Route name='application-form' path='/apply' component={ApplicationForm} />
           <Route name='privacy-policy' path='/privacy' component={PrivacyPolicy} />
           <Route name='login-page' path='/admin' component={LoginPage} />
+          <Route name='account-page' path='/account' component={AccountPage} />
           <Route path="*" component={NotFound} />
         </Route>
       </Router>
