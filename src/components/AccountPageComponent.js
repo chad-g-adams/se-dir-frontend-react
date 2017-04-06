@@ -1,6 +1,9 @@
 'use strict';
 
 import React from 'react';
+import { Link } from 'react-router';
+
+import Logout from './LogoutComponent.js';
 
 
 class AccountPageComponent extends React.Component {
@@ -34,6 +37,12 @@ class AccountPageComponent extends React.Component {
       }
       ]
     };
+
+    // IF we get a 403 error, it means we're not logged in.
+    // Set logged in to false and redirect to login page
+
+    // Else if we get a successful response, we are logged in
+    this.props.setLoggedIn(true);
     return test;
   }
 
@@ -46,11 +55,7 @@ class AccountPageComponent extends React.Component {
       this.setState({directoryAdmin: true});
     }
     if (permissions.authenticatedEnterprises) {
-      let list = permissions.authenticatedEnterprises.map((e) => {
-        if (e.name) return e.name;
-        return 'ID: ' + e.id;
-      });
-      this.setState({authenticatedEnterprises: list});
+      this.setState({authenticatedEnterprises: permissions.authenticatedEnterprises});
       this.setState({loaded: true});
     }
   }
@@ -62,39 +67,59 @@ class AccountPageComponent extends React.Component {
     return false;
   }
 
-  render() {
-    let jsx = [];
+  renderAuthenticatedEnterprises() {
     let permissions = [];
+    permissions.push(
+      this.state.authenticatedEnterprises.map(function(enterprise) {
+        return (
+          <li className='permission-item' key={enterprise.id}>{enterprise.name || 'ID: ' + enterprise.id}
+            <Link className="edit-enterprise" to={'/enterprise/' + enterprise.id}>Edit</Link>
+          </li>
+        );
+      })
+    );
+    return [
+      (<p key="perms">You have permission to edit the following enterprises:</p>),
+      (
+      <ul className='permissions__list' key="permissions__list">
+        {permissions}
+      </ul>
+      )];
+  }
 
+  renderLoading() {
+    return (<li key="loading" >Loading...</li>);
+  }
+
+  renderNoPermissions() {
+    return (<p>You currently have no permissions in the directory</p>);
+  }
+
+  renderDirectoryAdmin() {
+    return (<p>You have permission to edit the whole directory</p>);
+  }
+
+  renderPermissions() {
     if (!this.state.loaded) {
-      jsx.push(<li key="loading" >Loading...</li>);
-    } else {
-      if (this.hasNoPermissions()) {
-        jsx.push(<p>You currently have no permissions in the directory</p>);
-      }
-      else {
-        if (this.state.directoryAdmin) {
-          jsx.push(<p>You have permission to edit the whole directory</p>);
-        } else {
-          jsx.push(<p>You have permission to edit the following enterprises:</p>);
-          permissions.push(
-            this.state.authenticatedEnterprises.map(function(name) {
-              return (
-                <li className='permission-item' key={name}>{name} <a href='/'>Edit</a></li>
-              );
-            })
-          );
-        }
-      }
+      return this.renderLoading();
     }
+    if (this.hasNoPermissions()) {
+      return this.renderNoPermissions();
+    }
+    if (this.state.directoryAdmin) {
+      return this.renderDirectoryAdmin();
+    }
+    return this.renderAuthenticatedEnterprises();
+  }
+
+  render() {
+    let jsx = this.renderPermissions();
 
     return (
       <div className="accountpage-component page">
         <h1>Account</h1>
         {jsx}
-        <ul className='permissions__list'>
-          {permissions}
-        </ul>
+        <Logout setLoggedIn={this.props.setLoggedIn}/>
       </div>
     );
   }

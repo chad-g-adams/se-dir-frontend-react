@@ -6,16 +6,16 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import AccountPageComponent from 'components/AccountPageComponent.js';
+import LogoutComponent from 'components/LogoutComponent.js';
 
-describe('AccountPageComponent', () => {
+describe('LogoutComponent', () => {
   let component;
 
   beforeEach(() => {
-    component = shallow(<AccountPageComponent />);
+    component = shallow(<LogoutComponent />);
   });
 
   it('should have its component name as default className', () => {
-    expect(component.hasClass('accountpage-component')).to.equal(true);
+    expect(component.hasClass('logout-component')).to.equal(true);
   });
 });

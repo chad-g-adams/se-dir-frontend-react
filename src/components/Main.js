@@ -32,7 +32,8 @@ class AppComponent extends React.Component {
           <Route name="directory" path='/directory' component={Directory} />
           <Route name='application-form' path='/apply' component={ApplicationForm} />
           <Route name='privacy-policy' path='/privacy' component={PrivacyPolicy} />
-          <Route name='login-page' path='/admin' component={LoginPage} />
+          <Route name='login-page' path='/login' component={LoginPage} />
+          <Route name='account-page' path='/admin' component={AccountPage} />
           <Route name='account-page' path='/account' component={AccountPage} />
           <Route path="*" component={NotFound} />
         </Route>

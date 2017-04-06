@@ -16,6 +16,10 @@ class TemplateComponent extends React.Component {
     };
   }
 
+  setLoggedIn(loggedIn) {
+    this.setState({isLoggedIn: loggedIn});
+  }
+
    /**
    * Set the initial state
    *
@@ -26,6 +30,8 @@ class TemplateComponent extends React.Component {
       searchText: '',
       index: null,
       directory: null,
+      isLoggedIn: false,
+      setLoggedIn: this.setLoggedIn.bind(this),
       config: {},  // FIXME: Should this really be a state?
       logger: {
         /* eslint-disable no-console */
@@ -202,7 +208,7 @@ class TemplateComponent extends React.Component {
     return (
       <div className='template-component'>
         {/* Every page will have the navigation component */}
-        <SiteNavigation />
+        <SiteNavigation isLoggedIn={this.state.isLoggedIn}/>
 
         {/* The router will decide what to render here based on the URL we're at */}
         <main className='main'>

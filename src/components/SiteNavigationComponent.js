@@ -5,12 +5,11 @@ import { Link } from 'react-router';
 
 class SiteNavigationComponent extends React.Component {
   buildItems() {
-    //TODO use real logged in value
-    let loggedIn = false;
+    let loggedIn = this.props.isLoggedIn;
     let jsx = [];
     if (loggedIn) {
       jsx.push(
-        <li className="nav__item">
+        <li className="nav__item" key="Account">
           <Link className="nav__link" to="/account">Account</Link>
         </li>
       );
@@ -24,7 +23,7 @@ class SiteNavigationComponent extends React.Component {
       <header className="header sitenavigation-component">
         <nav className="nav nav--top">
           <ul className="nav__items">
-            <li className="nav__item">
+            <li className="nav__item" key="Home">
               <Link className="nav__link" to="/">Home</Link>
             </li>
           {additionalItems}
