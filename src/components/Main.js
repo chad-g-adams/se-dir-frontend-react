@@ -14,10 +14,18 @@ import PrivacyPolicy from './PrivacyPolicyComponent.js';
 import LoginPage from './LoginPageComponent.js';
 import AccountPage from './AccountPageComponent.js';
 
+import ReactGA from 'react-ga';
+ReactGA.initialize('UA-97087495-1');
+
 class AppComponent extends React.Component {
+  logPageView() {
+    ReactGA.set({ page: window.location.pathname });
+    ReactGA.pageview(window.location.pathname);
+  }
+
   render() {
     return (
-      <Router history={browserHistory}>
+      <Router history={browserHistory} onUpdate={this.logPageView}>
         <Route
           component={Template}
           path='/'
@@ -28,7 +36,7 @@ class AppComponent extends React.Component {
           }}
         >
           <IndexRoute component={Homepage} />
-          <Route name="enterprise" path='/enterprise/:slug' component={EnterprisePage} />
+          <Route name="enterprise" path='/enterprise/:id' component={EnterprisePage} />
           <Route name="directory" path='/directory' component={Directory} />
           <Route name='application-form' path='/apply' component={ApplicationForm} />
           <Route name='privacy-policy' path='/privacy' component={PrivacyPolicy} />

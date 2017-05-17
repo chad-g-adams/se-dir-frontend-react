@@ -24,6 +24,22 @@ class AccountPageComponent extends React.Component {
   }
 
   getPermissions() {
+    /*
+    var component = this,
+      url  = this.context.config.api_root + '/account/permissions';
+
+    fetch(url)
+      .then(function(response) {
+        if (response.ok) {
+          return response.json().then(function(json) {
+            component.setState({
+              enterprise: json
+            });
+          });
+        }
+      });
+    }
+
     // TODO: fetch the real permissions here
     let test = {
     "directoryAdmin": false,
@@ -44,6 +60,7 @@ class AccountPageComponent extends React.Component {
     // Else if we get a successful response, we are logged in
     this.props.setLoggedIn(true);
     return test;
+    */
   }
 
   parsePermissions(permissions) {
