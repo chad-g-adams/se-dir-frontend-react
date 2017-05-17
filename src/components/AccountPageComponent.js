@@ -49,11 +49,12 @@ class AccountPageComponent extends React.Component {
     fetch(url, {credentials: 'include'})
     .then(function(response) {
       if (response.ok) {
-        return response.json().then(function(json) {
+        response.json().then(function(json) {
           component.props.setLoggedIn(true);
           component.parsePermissions(component, json);
           return;
         });
+        return;
       }
       if (response.status == 403) {
         // IF we get a 403 error, it means we're not logged in.
@@ -63,11 +64,15 @@ class AccountPageComponent extends React.Component {
         return;
       }
       // TODO: handle the error!
-      console.log("Got response " + response.status);
+      /* eslint-disable no-console */
+      console.log('Got response ' + response.status);
+      /* eslint-enable no-console */
     })
     .catch(err => {
       // TODO: handle the error!
+      /* eslint-disable no-console */
       console.log(err);
+      /* eslint-enable no-console */
     });
   }
 

@@ -7,11 +7,35 @@ class LogoutComponent extends React.Component {
 
   handleLogout(e) {
     e.preventDefault();
+    this.performLogout();
+  }
 
-    //TODO: call backend logout/ endpoint here.
+  performLogout() {
+    let api_root = this.context.config.api_root;
+    if (!api_root) {
+      return;
+    }
+    let url  = api_root + '/account/logout';
+    let component = this;
 
-    this.props.setLoggedIn(false);
-    browserHistory.push('/');
+    fetch(url, {credentials: 'include'})
+    .then(function(response) {
+      if (response.ok) {
+        component.props.setLoggedIn(false);
+        browserHistory.push('/');
+        return;
+      }
+      // TODO: handle the error!
+      /* eslint-disable no-console */
+      console.log('Got response ' + response.status);
+      /* eslint-enable no-console */
+    })
+    .catch(err => {
+      // TODO: handle the error!
+      /* eslint-disable no-console */
+      console.log(err);
+      /* eslint-enable no-console */
+    });
   }
 
   render() {
@@ -24,6 +48,11 @@ class LogoutComponent extends React.Component {
 }
 
 LogoutComponent.displayName = 'LogoutComponent';
+
+LogoutComponent.contextTypes = {
+  'config': React.PropTypes.object,
+  'logger': React.PropTypes.object
+};
 
 // Uncomment properties you need
 // LogoutComponent.propTypes = {};
