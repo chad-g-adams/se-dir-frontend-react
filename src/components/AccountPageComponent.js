@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 
 import Logout from './LogoutComponent.js';
 
@@ -19,62 +19,70 @@ class AccountPageComponent extends React.Component {
 
   componentDidMount() {
     this.setState({loaded: false});
-    let permissions = this.getPermissions();
-    this.parsePermissions(permissions);
+    this.getPermissions(this.context.config.api_root);
   }
 
-  getPermissions() {
-    /*
-    var component = this,
-      url  = this.context.config.api_root + '/account/permissions';
+  /**
+   * Called before receiving new props
+   */
+  componentWillReceiveProps(nextProps, nextContext) {
+    let current_api_root = this.context.config.api_root,
+      new_api_root = nextContext.config.api_root,
+      do_query;
 
-    fetch(url)
-      .then(function(response) {
-        if (response.ok) {
-          return response.json().then(function(json) {
-            component.setState({
-              enterprise: json
-            });
-          });
-        }
-      });
+    do_query = (current_api_root !== new_api_root);
+
+    // If the api root is different than the previous
+    // time we received props/context, trigger a new fetch
+    if (do_query) {
+      this.getPermissions(new_api_root);
     }
-
-    // TODO: fetch the real permissions here
-    let test = {
-    "directoryAdmin": false,
-    "authenticatedEnterprises": [
-      {
-      "id": "58014c003762820bc88b8000",
-      "name": "13 Muesli"
-      },
-      {
-      "id": "58014c003762820bc88b8004"
-      }
-      ]
-    };
-
-    // IF we get a 403 error, it means we're not logged in.
-    // Set logged in to false and redirect to login page
-
-    // Else if we get a successful response, we are logged in
-    this.props.setLoggedIn(true);
-    return test;
-    */
   }
 
-  parsePermissions(permissions) {
+  getPermissions(api_root) {
+    if (!api_root) {
+      return;
+    }
+    let url  = api_root + '/account/permissions';
+    let component = this;
+
+    fetch(url, {credentials: 'include'})
+    .then(function(response) {
+      if (response.ok) {
+        return response.json().then(function(json) {
+          component.props.setLoggedIn(true);
+          component.parsePermissions(component, json);
+          return;
+        });
+      }
+      if (response.status == 403) {
+        // IF we get a 403 error, it means we're not logged in.
+        // Set logged in to false and redirect to login page
+        component.props.setLoggedIn(false);
+        browserHistory.push('/login');
+        return;
+      }
+      // TODO: handle the error!
+      console.log("Got response " + response.status);
+    })
+    .catch(err => {
+      // TODO: handle the error!
+      console.log(err);
+    });
+  }
+
+  parsePermissions(component, permissions) {
     if (!permissions) {
       return;
     }
 
     if (permissions.directoryAdmin) {
-      this.setState({directoryAdmin: true});
+      component.setState({directoryAdmin: true});
     }
     if (permissions.authenticatedEnterprises) {
-      this.setState({authenticatedEnterprises: permissions.authenticatedEnterprises});
-      this.setState({loaded: true});
+      component.setState({authenticatedEnterprises: permissions.authenticatedEnterprises});
     }
+    component.setState({loaded: true});
   }
 
   hasNoPermissions() {
@@ -141,6 +149,11 @@ class AccountPageComponent extends React.Component {
     );
   }
 }
+
+AccountPageComponent.contextTypes = {
+  'config': React.PropTypes.object,
+  'logger': React.PropTypes.object
+};
 
 AccountPageComponent.displayName = 'AccountPageComponent';
 
