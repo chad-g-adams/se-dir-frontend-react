@@ -1,15 +1,14 @@
-.login-form {
+.login-table {
+  border-spacing: 20px 5px;
+  text-align: center;
+  vertical-align: middle;
+}
 
-  .login-method {
-    border: 0;
-    border-radius: 5px;
-    font-size: 25px;
-    margin: 0 0 20px;
-    padding: 5px;
-  }
+.login-icons-row {
+  background-color: $primary-color;
+}
 
-  .button--login {
-    margin-left: 20px;
-  }
-
+.login-icons-cell {
+  padding: 5px;
+  width: 50%;
 }

@@ -5,7 +5,7 @@
 
 
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import LoginPageComponent from 'components/LoginPageComponent.js';
 
@@ -13,7 +13,23 @@ describe('LoginPageComponent', () => {
   let component;
 
   beforeEach(() => {
-    component = shallow(<LoginPageComponent />);
+
+    let componentOptions = {
+      context: {
+        config: {
+          api_root: ''
+        }
+      },
+      childContextTypes: {
+        'config': React.PropTypes.object
+      }
+    };
+
+    component = mount(
+      <LoginPageComponent/>,
+      componentOptions
+    );
+
   });
 
   it('should have its component name as default className', () => {
